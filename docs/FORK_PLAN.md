@@ -1,8 +1,8 @@
 # Fork foundation
 
-This fork is being prepared for a repurposed Echo Show running LineageOS 18.1
-(Android 11). It is installed directly over ADB and must not depend on Google
-Play or Google Play services.
+This fork is being prepared for an Amazon Echo Show 5 first generation (2019,
+device codename `checkers`) running LineageOS 18.1 (Android 11). It is installed
+directly over ADB and must not depend on Google Play or Google Play services.
 
 ## Confirmed scope
 
@@ -26,12 +26,11 @@ still to be selected before implementation.
 
 ## Development connection
 
-For Echo Show 5 first- or second-generation hardware, use a data-capable
-Micro-USB cable between the Echo's Micro-B port and the development computer.
-Keep the Echo powered by its normal AC adapter; the Micro-USB connection is for
-data and is not the device's main power source. A USB-C-to-Micro-B data cable is
-the simplest option for a USB-C Mac. A USB-A-to-Micro-B data cable plus a USB-C
-adapter or hub also works.
+Use a data-capable Micro-USB cable between the Echo Show 5 first generation's
+Micro-B port and the development computer. Keep the Echo powered by its normal
+AC adapter; the Micro-USB connection is for data and is not the device's main
+power source. A USB-C-to-Micro-B data cable is the simplest option for a USB-C
+Mac. A USB-A-to-Micro-B data cable plus a USB-C adapter or hub also works.
 
 After LineageOS USB debugging is enabled and the cable is connected:
 
@@ -43,9 +42,8 @@ adb shell getprop ro.product.cpu.abi
 adb shell wm size
 ```
 
-Expected values are Android 11, `armeabi-v7a`, and a 960x480 display. The
-product codename is expected to be `checkers` for Echo Show 5 (2019) or `cronos`
-for Echo Show 5 (2021); verify it rather than assuming it.
+Expected values are product codename `checkers`, Android 11, `armeabi-v7a`, and
+a 960x480 display. Verify all four before installing the first APK.
 
 Build and install the debug APK with:
 
