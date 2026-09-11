@@ -50,6 +50,39 @@ The ROM installation instructions are at:
 
 <https://xdaforums.com/t/rom-unofficial-11-checkers-lineageos-18-1-for-the-amazon-echo-show-5-2019.4763475/>
 
+## ROM selection status
+
+LineageOS v0.7 is staged as a test candidate, not accepted as a proven stable
+base. As of 2026-09-12 it has been public for seven days. GitHub reports 412
+asset downloads, and the XDA thread contains one explicit report of a successful
+installation with the camera working. Those signals establish installability,
+but they do not establish long-term stability.
+
+The v0.7 changes are valuable for this project: camera support, a fix for audio
+breaking after several days, and improved microphone quality and detection. The
+older v0.6 has more download history, but it predates those fixes and is not a
+better default for an always-on voice application.
+
+There are unresolved concerns that must be tested on the physical device:
+
+- The upstream ROM thread still labels the build experimental, uses permissive
+  SELinux, disables deep sleep, and warns that microphones may be quiet.
+- The `mt8163-common` audio effects configuration inherited by `checkers` still
+  leaves AEC, noise suppression, and automatic gain control commented out. An
+  open upstream report demonstrates the resulting lack of Android audio capture
+  preprocessing on `cronos`. The same configuration is present for `checkers`,
+  but the effect on Butler must be measured because Butler also uses WebRTC's
+  audio pipeline.
+- Community reports made before v0.7 mention intermittent touchscreen freezes,
+  Wi-Fi disconnections, and boot trouble with an AUX cable connected. The v0.7
+  changelog does not claim fixes for these cases, and there has not yet been
+  enough post-release time to assess them.
+
+Recheck the release thread and open audio issues immediately before flashing.
+After installation, require repeated cold boots, stable Wi-Fi, an overnight
+audio run, and near-field/far-field voice tests while the speaker is playing
+before treating this ROM as the fork's supported device base.
+
 ## Read-only preflight
 
 Do these checks on the Windows or x86-64 Linux host before authorizing any
@@ -89,7 +122,8 @@ preflight.
    TWRP is useful for investigation, but its restoration is not considered a
    tested recovery procedure. Official stock Fire OS packages linked from the
    ROM thread are the documented rollback route.
-5. In TWRP, wipe data, system, and cache, then flash
+5. Recheck the ROM selection status. If v0.7 remains the selected test candidate,
+   wipe data, system, and cache in TWRP, then flash
    `lineage-18.1-20260904-UNOFFICIAL-checkers.zip`.
 6. Do not install MindTheGapps or another Google Apps package. This project is
    intentionally Google-free.
