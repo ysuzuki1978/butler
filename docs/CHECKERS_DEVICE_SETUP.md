@@ -1,0 +1,104 @@
+# Echo Show 5 first-generation setup
+
+This is the preparation record for converting a working Amazon Echo Show 5
+first generation (2019, model H23K37, codename `checkers`) from stock Fire OS to
+LineageOS 18.1. It deliberately separates read-only preparation from the step
+that modifies the device.
+
+## Host and cables
+
+Keep the original Echo AC adapter connected for power. Connect the Micro-B data
+port to the computer with a data-capable Micro-USB cable. A charging-only cable
+will not work. UART hardware, an OTG adapter, and opening the device are not
+needed for the normal unlock path on a working unit.
+
+The current amonet v2.0.1 package supports Windows and Linux for the normal
+unlock path. Its bundled Linux fastboot programs are x86-64 and i386 ELF
+binaries, and its Windows program is an i386 PE executable. It does not contain
+a macOS binary. The maintainer also states that Apple Silicon macOS is not a
+supported host because the process needs the modified fastboot binary.
+
+Use a physical Intel/AMD Windows or Linux computer when possible. A bootable
+x86-64 Linux live USB is sufficient; Linux does not have to be installed on the
+computer. An emulated x86-64 VM on Apple Silicon adds USB passthrough and timing
+failure points and is a fallback rather than the preferred host.
+
+For the Linux normal path, the package requires Bash, `unzip`, and the standard
+`timeout` utility. For the recovery path that opens the device, the upstream
+instructions also require Python 3, pyserial, ADB, fastboot, and ModemManager to
+be stopped. That recovery path is not planned for this working device.
+
+## Prepared artifacts
+
+The binary files are stored under `.tools/device/`, which is ignored by Git.
+Run `scripts/verify-checkers-assets.sh` after copying or downloading them.
+
+| Purpose | File | SHA-256 | Provenance |
+| --- | --- | --- | --- |
+| Unlock and TWRP | `amonet-checkers-v2.0.1.zip` | `770324a8ed5ab922c0383f8ba072d70fc0190cc2c879f12f67b8d6cfa3ad30ee` | Locally recorded from the current XDA attachment; XDA does not publish a checksum |
+| Android 11 ROM | `lineage-18.1-20260904-UNOFFICIAL-checkers.zip` | `785fa643fd68b2e6f6f02d96a2da58373c6a577b92a27cf6cec69603bb94068e` | Published by the `amazon-oss/releases` v0.7 release |
+
+The LineageOS archive was downloaded from:
+
+<https://github.com/amazon-oss/releases/releases/tag/lineage-18.1-checkers-v0.7>
+
+The unlock archive and current instructions are at:
+
+<https://xdaforums.com/t/unlock-root-twrp-unbrick-amazon-echo-show-5-1st-gen-2019-checkers.4762900/>
+
+The ROM installation instructions are at:
+
+<https://xdaforums.com/t/rom-unofficial-11-checkers-lineageos-18-1-for-the-amazon-echo-show-5-2019.4763475/>
+
+## Read-only preflight
+
+Do these checks on the Windows or x86-64 Linux host before authorizing any
+write. On a working stock device, power it off, keep the AC adapter connected,
+hold Volume Down + Volume Up + Mute until the fastboot screen appears, and only
+then connect the Micro-USB data cable to the computer.
+
+Extract `amonet-checkers-v2.0.1.zip`, open its `amonet` directory, and use the
+bundled modified fastboot binary to record these values:
+
+```sh
+./bin/fastboot getvar product
+./bin/fastboot getvar lk_build_desc
+./bin/fastboot getvar unlock_status
+```
+
+Stop unless `product` is exactly `CHECKERS`. Record `lk_build_desc` in the local
+work log but do not commit a serial number or other device identifier. The
+v2.0.1 package currently contains a special payload for
+`44072a3-20240709_170103` and a default payload for other builds; the script
+selects between them after reading `lk_build_desc`.
+
+The next action, running `fastbrick.bat` on Windows or `./fastbrick.sh` on
+Linux and entering `YES`, starts the write operation. Do not enter `YES` during
+preflight.
+
+## Conversion sequence
+
+1. Verify `CHECKERS`, the LK build, cable stability, AC power, and both archive
+   hashes.
+2. Run the current amonet normal path and enter `YES` only when ready for the
+   uninterrupted unlock. The upstream guide warns that interruption after its
+   ten-second grace period can permanently brick the device.
+3. Confirm that the device reboots into the current TWRP 3.7.0_9-0 supplied by
+   amonet v2.0.1.
+4. Before wiping, preserve any needed Fire OS data. A raw storage backup from
+   TWRP is useful for investigation, but its restoration is not considered a
+   tested recovery procedure. Official stock Fire OS packages linked from the
+   ROM thread are the documented rollback route.
+5. In TWRP, wipe data, system, and cache, then flash
+   `lineage-18.1-20260904-UNOFFICIAL-checkers.zip`.
+6. Do not install MindTheGapps or another Google Apps package. This project is
+   intentionally Google-free.
+7. Reboot, complete the local Android setup, enable Developer options and USB
+   debugging, then verify the target properties listed in `docs/FORK_PLAN.md`.
+8. Install the debug APK with `adb install -r` and begin device-level testing.
+
+Do not modify LK, Preloader, TEE, or other critical partitions outside the
+published amonet updater. The current LineageOS build is experimental, runs
+SELinux in permissive mode, disables deep sleep, and may have quieter microphone
+input. Do not store sensitive data on it; microphone calibration must be part of
+the Butler acceptance test.

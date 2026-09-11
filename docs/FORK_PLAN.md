@@ -32,7 +32,8 @@ AC adapter; the Micro-USB connection is for data and is not the device's main
 power source. A USB-C-to-Micro-B data cable is the simplest option for a USB-C
 Mac. A USB-A-to-Micro-B data cable plus a USB-C adapter or hub also works.
 
-After LineageOS USB debugging is enabled and the cable is connected:
+After the stock Fire OS device has been unlocked, LineageOS has been installed,
+USB debugging is enabled, and the cable is connected:
 
 ```sh
 adb devices -l
@@ -52,6 +53,6 @@ Build and install the debug APK with:
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-This application workflow does not require fastboot, TWRP, an OTG cable, or a
-UART adapter. ROM installation and bootloader work are outside this fork's app
-development procedure.
+The day-to-day application workflow does not require fastboot, TWRP, an OTG
+cable, or a UART adapter. Converting a stock Fire OS device is a one-time
+prerequisite documented in `docs/CHECKERS_DEVICE_SETUP.md`.
