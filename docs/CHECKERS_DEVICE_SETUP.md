@@ -23,6 +23,14 @@ binaries, and its Windows program is an i386 PE executable. It does not contain
 a macOS binary. The maintainer also states that Apple Silicon macOS is not a
 supported host because the process needs the modified fastboot binary.
 
+This is not primarily a missing macOS USB driver. Android SDK or Homebrew
+fastboot may enumerate the device, but the normal unlock depends on behavior in
+amonet's modified fastboot and the stock tool cannot replace it. The maintainer
+intentionally withholds the modification source and patch to avoid disclosing
+the exploit to Amazon, so a native Apple Silicon build cannot currently be
+reproduced from the public repository. Never substitute ordinary fastboot for
+the bundled binary during the unlock step.
+
 Use a physical Intel/AMD Windows or Linux computer when possible. A bootable
 x86-64 Linux live USB is sufficient; Linux does not have to be installed on the
 computer. An emulated x86-64 VM on Apple Silicon adds USB passthrough and timing
