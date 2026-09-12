@@ -5,6 +5,11 @@ first generation (2019, model H23K37, codename `checkers`) from stock Fire OS to
 LineageOS 18.1. It deliberately separates read-only preparation from the step
 that modifies the device.
 
+Do not use packages or procedures labeled Echo Show 5 (2021), second
+generation, or `cronos`. They target different hardware. Release numbers are
+maintained separately for each device, so `cronos` v0.3 is not an older build
+that can be installed on `checkers`.
+
 ## Host and cables
 
 Keep the original Echo AC adapter connected for power. Connect the Micro-B data
