@@ -41,7 +41,8 @@ Run `scripts/verify-checkers-assets.sh` after copying or downloading them.
 | Purpose | File | SHA-256 | Provenance |
 | --- | --- | --- | --- |
 | Unlock and TWRP | `amonet-checkers-v2.0.1.zip` | `770324a8ed5ab922c0383f8ba072d70fc0190cc2c879f12f67b8d6cfa3ad30ee` | Locally recorded from the current XDA attachment; XDA does not publish a checksum |
-| Android 11 ROM | `lineage-18.1-20260904-UNOFFICIAL-checkers.zip` | `785fa643fd68b2e6f6f02d96a2da58373c6a577b92a27cf6cec69603bb94068e` | Published by the `amazon-oss/releases` v0.7 release |
+| Proven baseline ROM | `lineage-18.1-20260624-UNOFFICIAL-checkers.zip` | `8a0c7f5daffe2b14b8f5e59219d2d8a1c04c534460e87459e2108b8d677db32f` | Published by the `amazon-oss/releases` v0.6 release |
+| Evaluation ROM | `lineage-18.1-20260904-UNOFFICIAL-checkers.zip` | `785fa643fd68b2e6f6f02d96a2da58373c6a577b92a27cf6cec69603bb94068e` | Published by the `amazon-oss/releases` v0.7 release |
 
 The LineageOS archive was downloaded from:
 
@@ -57,16 +58,29 @@ The ROM installation instructions are at:
 
 ## ROM selection status
 
-LineageOS v0.7 is staged as a test candidate, not accepted as a proven stable
-base. As of 2026-09-12 it has been public for seven days. GitHub reports 412
-asset downloads, and the XDA thread contains one explicit report of a successful
+Use LineageOS v0.6 for the first controlled boot and hardware baseline. A
+detailed Japanese field report records a successful conversion in August 2026
+from Fire OS 6.5.6.9 on a first-generation H23K37 `checkers`, using the exact
+`lineage-18.1-20260624-UNOFFICIAL-checkers.zip` image. Other Japanese reports
+from the same period describe smooth operation on first-generation hardware.
+GitHub reports 3,031 downloads for the v0.6 image as of 2026-09-12.
+
+The detailed report used amonet v1.1.6 and TWRP 3.2.3. Those are evidence for
+the ROM, not the unlock package we should now use. The current unlock thread
+requires users of this ROM to move to the latest exploit, so this procedure
+keeps amonet v2.0.1 and its TWRP 3.7.0_9-0.
+
+LineageOS v0.7 remains staged as the follow-up evaluation build. As of
+2026-09-12 it has been public for seven days. GitHub reports 412 asset
+downloads, and the XDA thread contains one explicit report of a successful
 installation with the camera working. Those signals establish installability,
 but they do not establish long-term stability.
 
 The v0.7 changes are valuable for this project: camera support, a fix for audio
-breaking after several days, and improved microphone quality and detection. The
-older v0.6 has more download history, but it predates those fixes and is not a
-better default for an always-on voice application.
+breaking after several days, and improved microphone quality and detection.
+After v0.6 proves the unlock, display, touch, Wi-Fi, speaker, microphone, and
+Butler installation path, update to v0.7 through TWRP and repeat the same tests.
+This separates device bring-up from regressions introduced by the newer ROM.
 
 There are unresolved concerns that must be tested on the physical device:
 
@@ -127,14 +141,17 @@ preflight.
    TWRP is useful for investigation, but its restoration is not considered a
    tested recovery procedure. Official stock Fire OS packages linked from the
    ROM thread are the documented rollback route.
-5. Recheck the ROM selection status. If v0.7 remains the selected test candidate,
-   wipe data, system, and cache in TWRP, then flash
-   `lineage-18.1-20260904-UNOFFICIAL-checkers.zip`.
+5. Recheck the ROM selection status. Wipe data, system, and cache in TWRP, then
+   flash the proven baseline
+   `lineage-18.1-20260624-UNOFFICIAL-checkers.zip`.
 6. Do not install MindTheGapps or another Google Apps package. This project is
    intentionally Google-free.
 7. Reboot, complete the local Android setup, enable Developer options and USB
    debugging, then verify the target properties listed in `docs/FORK_PLAN.md`.
-8. Install the debug APK with `adb install -r` and begin device-level testing.
+8. Install the debug APK with `adb install -r` and run the baseline device tests.
+9. If the baseline passes, update to
+   `lineage-18.1-20260904-UNOFFICIAL-checkers.zip` through TWRP without adding
+   GApps, then repeat the device and voice tests before accepting v0.7.
 
 Do not modify LK, Preloader, TEE, or other critical partitions outside the
 published amonet updater. The current LineageOS build is experimental, runs

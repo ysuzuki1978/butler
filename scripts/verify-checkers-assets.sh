@@ -7,6 +7,8 @@ asset_dir=${1:-"$project_dir/.tools/device"}
 
 amonet_name=amonet-checkers-v2.0.1.zip
 amonet_sha=770324a8ed5ab922c0383f8ba072d70fc0190cc2c879f12f67b8d6cfa3ad30ee
+baseline_name=lineage-18.1-20260624-UNOFFICIAL-checkers.zip
+baseline_sha=8a0c7f5daffe2b14b8f5e59219d2d8a1c04c534460e87459e2108b8d677db32f
 lineage_name=lineage-18.1-20260904-UNOFFICIAL-checkers.zip
 lineage_sha=785fa643fd68b2e6f6f02d96a2da58373c6a577b92a27cf6cec69603bb94068e
 
@@ -43,6 +45,7 @@ verify_file() {
 }
 
 verify_file "$amonet_name" "$amonet_sha"
+verify_file "$baseline_name" "$baseline_sha"
 verify_file "$lineage_name" "$lineage_sha"
 
 host_os=$(uname -s)
